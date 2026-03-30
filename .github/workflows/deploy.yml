@@ -8,16 +8,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        # fetch secrets from the GitHUb Secrets
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: root
+          username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/ubuntu/GitHub_Actions_Demo
-            git pull
+            git pull origin main
             docker compose up -d --build
