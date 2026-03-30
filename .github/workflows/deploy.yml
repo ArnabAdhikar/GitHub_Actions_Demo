@@ -1,0 +1,23 @@
+name: Deploy the Node.js Application on EC2 Instance
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+   
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        # fetch secrets from the GitHUb Secrets
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/GitHub_Actions_Demo
+            git pull
+            docker compose up -d --build
